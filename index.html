@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Faculty Management System</title>
+  <!-- Font Awesome 6 for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #f4f6fc;
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', system-ui, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1.5rem;
+      margin: 0;
+    }
+
+    .dashboard {
+      max-width: 1100px;
+      width: 100%;
+      background: white;
+      border-radius: 2rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+      padding: 2rem 2rem 2.5rem;
+      transition: all 0.2s ease;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #0b1b3a;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .subtitle {
+      color: #4a5c6c;
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+      border-left: 4px solid #2563eb;
+      padding-left: 1rem;
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .export-btn {
+      background: white;
+      border: 1px solid #cfdde9;
+      padding: 0.65rem 1.4rem;
+      border-radius: 2.5rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #1e293b;
+      background: #f8fafd;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-left: auto;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      letter-spacing: -0.2px;
+    }
+
+    .export-btn:hover {
+      background: #eef2f6;
+      border-color: #b9c8da;
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .stats-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      background: #f9fbfd;
+      padding: 1.2rem 1.5rem;
+      border-radius: 1.5rem;
+      margin-bottom: 2.5rem;
+      border: 1px solid #eef2f7;
+      justify-content: space-between;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 500;
+      color: #1e2b3c;
+    }
+
+    .stat-item i {
+      font-size: 1.3rem;
+      color: #2563eb;
+      background: #e9efff;
+      padding: 0.5rem;
+      border-radius: 0.8rem;
+    }
+
+    .stat-number {
+      font-weight: 700;
+      font-size: 1.4rem;
+      margin-right: 0.2rem;
+    }
+
+    .form-panel {
+      background: #ffffff;
+      border: 1px solid #e9eef3;
+      border-radius: 1.8rem;
+      padding: 1.8rem 1.8rem 2rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.02);
+    }
+
+    .form-title {
+      font-weight: 600;
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      color: #0b1b3a;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .input-group label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #4b5a6b;
+    }
+
+    .input-group input, .input-group select {
+      padding: 0.8rem 1rem;
+      border: 1px solid #dce3eb;
+      border-radius: 0.9rem;
+      font-size: 0.9rem;
+      background: #fbfcfe;
+      transition: 0.2s;
+      font-family: inherit;
+    }
+
+    .input-group input:focus, .input-group select:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+      background: white;
+    }
+
+    .add-btn {
+      background: #0b1b3a;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.8rem;
+      border-radius: 2.5rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-top: 1.5rem;
+      background: #111f3a;
+      letter-spacing: 0.3px;
+    }
+
+    .add-btn:hover {
+      background: #1e3a6b;
+    }
+
+    .faculty-list {
+      margin-top: 0.5rem;
+    }
+
+    .list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: 1.2rem;
+      border: 1px solid #edf2f9;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      font-size: 0.9rem;
+    }
+
+    th {
+      text-align: left;
+      padding: 1rem 1rem;
+      background: #f8fafd;
+      font-weight: 600;
+      color: #334155;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    td {
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid #f1f5f9;
+      color: #1e293b;
+    }
+
+    .badge {
+      background: #e9f0ff;
+      color: #1e4bd2;
+      font-weight: 600;
+      padding: 0.2rem 0.7rem;
+      border-radius: 2rem;
+      font-size: 0.75rem;
+      display: inline-block;
+    }
+
+    .action-icons {
+      display: flex;
+      gap: 0.9rem;
+      color: #64748b;
+    }
+
+    .action-icons i {
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 1rem;
+    }
+
+    .action-icons i.fa-trash-can:hover {
+      color: #c00;
+    }
+
+    .action-icons i.fa-pen-to-square:hover {
+      color: #2563eb;
+    }
+
+    .empty-message {
+      text-align: center;
+      padding: 2.5rem;
+      color: #64748b;
+      font-style: italic;
+    }
+
+    hr {
+      border: 0.5px solid #e9eef3;
+      margin: 1rem 0 1.2rem;
+    }
+
+    @media (max-width: 600px) {
+      .dashboard {
+        padding: 1.5rem;
+      }
+      .stats-grid {
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <div class="header-row">
+      <h1><i class="fas fa-graduation-cap" style="color:#2563eb;"></i> Faculty Management System</h1>
+      <button class="export-btn" id="exportCSVBtn"><i class="fas fa-download"></i> Export CSV ↓</button>
+    </div>
+    <div class="subtitle">
+      <i class="fas fa-pen"></i> Add, manage and export faculty records
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid" id="statsPanel">
+      <div class="stat-item"><i class="fas fa-users"></i> <span><span class="stat-number" id="totalFaculty">0</span> Total faculty</span></div>
+      <div class="stat-item"><i class="fas fa-building"></i> <span><span class="stat-number" id="totalDepartments">0</span> Departments</span></div>
+      <div class="stat-item"><i class="fas fa-user-tie"></i> <span><span class="stat-number" id="totalProfessors">0</span> Professors</span></div>
+      <div class="stat-item"><i class="fas fa-chalkboard-teacher"></i> <span><span class="stat-number" id="totalLecturers">0</span> Lecturers</span></div>
+    </div>
+
+    <!-- Add Faculty Form -->
+    <div class="form-panel">
+      <div class="form-title"><i class="fas fa-user-plus"></i> Add faculty member</div>
+      <div class="form-grid">
+        <div class="input-group">
+          <label>Full name *</label>
+          <input type="text" id="fullName" placeholder="e.g. Dr. Priya Sharma" autocomplete="off">
+        </div>
+        <div class="input-group">
+          <label>Email</label>
+          <input type="email" id="email" placeholder="faculty@university.edu" autocomplete="off">
+        </div>
+        <div class="input-group">
+          <label>Phone</label>
+          <input type="text" id="phone" placeholder="+91 98765 43210" autocomplete="off">
+        </div>
+        <div class="input-group">
+          <label>Department *</label>
+          <select id="department">
+            <option value="" selected disabled>Select department</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Mechanical">Mechanical</option>
+            <option value="Humanities">Humanities</option>
+            <option value="Management">Management</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Designation *</label>
+          <select id="designation">
+            <option value="" selected disabled>Select designation</option>
+            <option value="Professor">Professor</option>
+            <option value="Associate Professor">Associate Professor</option>
+            <option value="Assistant Professor">Assistant Professor</option>
+            <option value="Lecturer">Lecturer</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>Experience (years)</label>
+          <input type="number" id="experience" placeholder="e.g. 8" min="0" step="1" value="">
+        </div>
+      </div>
+      <button class="add-btn" id="addFacultyBtn"><i class="fas fa-plus-circle"></i> Add Faculty</button>
+      <div style="font-size:0.8rem; color:#6b7280; margin-top:0.7rem;">* required fields</div>
+    </div>
+
+    <!-- Faculty Records Table -->
+    <div class="faculty-list">
+      <div class="list-header">
+        <h3 style="font-weight:600; color:#0b1b3a;"><i class="fas fa-list-ul"></i> Faculty records</h3>
+      </div>
+      <div class="table-wrapper">
+        <table id="facultyTable">
+          <thead>
+             <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Department</th>
+                <th>Designation</th>
+                <th>Exp (yrs)</th>
+                <th style="text-align:center;">Actions</th>
+             </tr>
+          </thead>
+          <tbody id="tableBody">
+             <tr><td colspan="7" class="empty-message">No faculty records. Add one above.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // ---------- Faculty Data Store ----------
+      let facultyList = [];
+
+      // Default seed data matching the image (2 faculty, departments 2, professors 1, lecturers 0)
+      const seedData = [
+        {
+          id: crypto.randomUUID ? crypto.randomUUID() : 'id-' + Date.now() + '-1',
+          fullName: 'Dr. Arjun Mehta',
+          email: 'arjun.mehta@university.edu',
+          phone: '+91 98250 12345',
+          department: 'Computer Science',
+          designation: 'Professor',
+          experience: 12
+        },
+        {
+          id: crypto.randomUUID ? crypto.randomUUID() : 'id-' + Date.now() + '-2',
+          fullName: 'Prof. Sunita Rao',
+          email: 'sunita.rao@university.edu',
+          phone: '+91 98440 56789',
+          department: 'Electronics',
+          designation: 'Professor',  // according to seed, Professors count 1 originally? We need to match: total faculty 2, professors 1, lecturers 0.
+          // Actually seed shows: Professors: 1, Lecturers: 0. But we have 2 faculty. If one is Professor and other maybe Associate? 
+          // Let's adjust second to "Associate Professor" still counts as Professor? Usually professor category includes associate/assistant.
+          // But to strictly meet "Professors:1" we can set one as Professor and other as something else like "Assistant Professor".
+          // Let's set second as "Associate Professor". It might be counted under professors? We'll define professors as those containing 'Professor'.
+          // Better: make second one "Assistant Professor". Then professor count =1 (only Arjun Mehta). But that would make designation not "Professor".
+          // The image stats: Professors:1, Lecturers:0. So we keep Arjun as Professor, second as "Associate Professor". Our stats logic will count "Professor" exactly if designation === 'Professor' ? We'll treat professors count as designations that include 'Professor' (Professor, Associate, Assistant). But image says Professors:1.
+          // Let's make second "Assistant Professor". Then count of exact 'Professor' is 1. Perfect.
+        }
+      ];
+
+      // Adjust second seed to match exact Professors:1
+      seedData[1].designation = 'Assistant Professor'; 
+      // Now Arjun = Professor (1), Sunita = Assistant Professor. Total 2. Departments: CS, Electronics => 2. Lecturers:0.
+
+      // ---------- Helper: Update Stats & Table ----------
+      function updateUI() {
+        updateStats();
+        renderTable();
+      }
+
+      function updateStats() {
+        const total = facultyList.length;
+        document.getElementById('totalFaculty').textContent = total;
+
+        // Unique departments
+        const deptSet = new Set(facultyList.map(f => f.department.trim()).filter(d => d !== ''));
+        document.getElementById('totalDepartments').textContent = deptSet.size;
+
+        // Professors count: designation exactly "Professor" (to match image count =1)
+        const professorsCount = facultyList.filter(f => f.designation === 'Professor').length;
+        document.getElementById('totalProfessors').textContent = professorsCount;
+
+        // Lecturers count: designation exactly "Lecturer"
+        const lecturersCount = facultyList.filter(f => f.designation === 'Lecturer').length;
+        document.getElementById('totalLecturers').textContent = lecturersCount;
+      }
+
+      // Render table rows
+      function renderTable() {
+        const tbody = document.getElementById('tableBody');
+        if (!tbody) return;
+
+        if (facultyList.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" class="empty-message">No faculty records. Add one above.</td></tr>`;
+          return;
+        }
+
+        let html = '';
+        facultyList.forEach(f => {
+          html += `
+            <tr data-id="${f.id}">
+              <td><strong>${escapeHtml(f.fullName) || '—'}</strong></td>
+              <td>${escapeHtml(f.email) || '—'}</td>
+              <td>${escapeHtml(f.phone) || '—'}</td>
+              <td><span class="badge">${escapeHtml(f.department) || '—'}</span></td>
+              <td>${escapeHtml(f.designation) || '—'}</td>
+              <td>${f.experience !== undefined && f.experience !== '' ? f.experience : '—'}</td>
+              <td style="text-align:center;">
+                <div class="action-icons">
+                  <i class="fas fa-pen-to-square" data-action="edit" data-id="${f.id}" title="Edit"></i>
+                  <i class="fas fa-trash-can" data-action="delete" data-id="${f.id}" title="Delete"></i>
+                </div>
+              </td>
+            </tr>
+          `;
+        });
+        tbody.innerHTML = html;
+      }
+
+      // Simple escape
+      function escapeHtml(text) {
+        if (!text && text !== 0) return '';
+        return String(text)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      // ---------- Add Faculty ----------
+      function addFaculty() {
+        const fullNameInput = document.getElementById('fullName');
+        const departmentSelect = document.getElementById('department');
+        const designationSelect = document.getElementById('designation');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+        const experienceInput = document.getElementById('experience');
+
+        const fullName = fullNameInput.value.trim();
+        const department = departmentSelect.value;
+        const designation = designationSelect.value;
+
+        // Validation: full name and department and designation required
+        if (!fullName) {
+          alert('Please enter full name.');
+          fullNameInput.focus();
+          return;
+        }
+        if (!department) {
+          alert('Please select a department.');
+          departmentSelect.focus();
+          return;
+        }
+        if (!designation) {
+          alert('Please select a designation.');
+          designationSelect.focus();
+          return;
+        }
+
+        const email = emailInput.value.trim();
+        const phone = phoneInput.value.trim();
+        let experience = experienceInput.value.trim();
+        if (experience !== '') {
+          const expNum = Number(experience);
+          if (isNaN(expNum) || expNum < 0) {
+            alert('Experience must be a valid non-negative number.');
+            experienceInput.focus();
+            return;
+          }
+          experience = expNum;
+        } else {
+          experience = ''; // keep as empty
+        }
+
+        const newFaculty = {
+          id: crypto.randomUUID ? crypto.randomUUID() : 'fac-' + Date.now() + Math.random(),
+          fullName,
+          email,
+          phone,
+          department,
+          designation,
+          experience: experience !== '' ? experience : ''
+        };
+
+        facultyList.push(newFaculty);
+        
+        // Clear form
+        fullNameInput.value = '';
+        emailInput.value = '';
+        phoneInput.value = '';
+        departmentSelect.value = '';
+        designationSelect.value = '';
+        experienceInput.value = '';
+
+        updateUI();
+      }
+
+      // ---------- Delete Faculty ----------
+      function deleteFaculty(id) {
+        if (!confirm('Remove this faculty record?')) return;
+        facultyList = facultyList.filter(f => f.id !== id);
+        updateUI();
+      }
+
+      // ---------- Edit Faculty (inline prompt simulation) ----------
+      function editFaculty(id) {
+        const faculty = facultyList.find(f => f.id === id);
+        if (!faculty) return;
+
+        // For simplicity, we use a prompt-based edit for name/email/phone/exp, and dropdowns for dept/designation via select elements?
+        // Better UX: fill form with data and change button to "Update". We'll implement a stateful edit.
+        // Set form values to selected faculty
+        document.getElementById('fullName').value = faculty.fullName || '';
+        document.getElementById('email').value = faculty.email || '';
+        document.getElementById('phone').value = faculty.phone || '';
+        document.getElementById('department').value = faculty.department || '';
+        document.getElementById('designation').value = faculty.designation || '';
+        document.getElementById('experience').value = faculty.experience !== undefined && faculty.experience !== '' ? faculty.experience : '';
+
+        // Change add button to update mode
+        const addBtn = document.getElementById('addFacultyBtn');
+        addBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Update Faculty';
+        addBtn.dataset.editingId = id;
+
+        // Scroll to form
+        document.querySelector('.form-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      function resetFormToAddMode() {
+        const addBtn = document.getElementById('addFacultyBtn');
+        addBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Add Faculty';
+        delete addBtn.dataset.editingId;
+        // Clear form
+        document.getElementById('fullName').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('phone').value = '';
+        document.getElementById('department').value = '';
+        document.getElementById('designation').value = '';
+        document.getElementById('experience').value = '';
+      }
+
+      function handleAddOrUpdate() {
+        const addBtn = document.getElementById('addFacultyBtn');
+        const editingId = addBtn.dataset.editingId;
+        
+        if (editingId) {
+          // Update existing faculty
+          const faculty = facultyList.find(f => f.id === editingId);
+          if (!faculty) {
+            resetFormToAddMode();
+            updateUI();
+            return;
+          }
+
+          const fullNameInput = document.getElementById('fullName');
+          const departmentSelect = document.getElementById('department');
+          const designationSelect = document.getElementById('designation');
+          const emailInput = document.getElementById('email');
+          const phoneInput = document.getElementById('phone');
+          const experienceInput = document.getElementById('experience');
+
+          const fullName = fullNameInput.value.trim();
+          const department = departmentSelect.value;
+          const designation = designationSelect.value;
+
+          if (!fullName) { alert('Full name required.'); return; }
+          if (!department) { alert('Department required.'); return; }
+          if (!designation) { alert('Designation required.'); return; }
+
+          let experience = experienceInput.value.trim();
+          if (experience !== '') {
+            const expNum = Number(experience);
+            if (isNaN(expNum) || expNum < 0) {
+              alert('Invalid experience.');
+              return;
+            }
+            experience = expNum;
+          } else {
+            experience = '';
+          }
+
+          faculty.fullName = fullName;
+          faculty.email = emailInput.value.trim();
+          faculty.phone = phoneInput.value.trim();
+          faculty.department = department;
+          faculty.designation = designation;
+          faculty.experience = experience;
+
+          resetFormToAddMode();
+          updateUI();
+        } else {
+          // Add new
+          addFaculty();
+        }
+      }
+
+      // ---------- Export CSV ----------
+      function exportToCSV() {
+        if (facultyList.length === 0) {
+          alert('No faculty records to export.');
+          return;
+        }
+
+        const headers = ['Full Name', 'Email', 'Phone', 'Department', 'Designation', 'Experience (years)'];
+        const rows = facultyList.map(f => [
+          f.fullName || '',
+          f.email || '',
+          f.phone || '',
+          f.department || '',
+          f.designation || '',
+          f.experience !== undefined ? f.experience : ''
+        ]);
+
+        let csvContent = headers.join(',') + '\n';
+        rows.forEach(row => {
+          const escapedRow = row.map(cell => {
+            if (cell === null || cell === undefined) return '';
+            const str = String(cell);
+            // Escape double quotes and wrap in quotes if contains comma, quote or newline
+            if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+              return '"' + str.replace(/"/g, '""') + '"';
+            }
+            return str;
+          });
+          csvContent += escapedRow.join(',') + '\n';
+        });
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'faculty_records.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      }
+
+      // ---------- Event Listeners ----------
+      function bindEvents() {
+        document.getElementById('addFacultyBtn').addEventListener('click', handleAddOrUpdate);
+
+        document.getElementById('exportCSVBtn').addEventListener('click', exportToCSV);
+
+        // Table actions using event delegation
+        document.getElementById('tableBody').addEventListener('click', (e) => {
+          const target = e.target;
+          if (!target) return;
+          const action = target.getAttribute('data-action');
+          const id = target.getAttribute('data-id');
+          if (!id) return;
+
+          if (action === 'delete') {
+            deleteFaculty(id);
+          } else if (action === 'edit') {
+            editFaculty(id);
+          }
+        });
+
+        // Optional: reset editing mode if user manually clears form? Better add a cancel button? 
+        // We'll add a tiny cancel link near button when editing.
+        const formPanel = document.querySelector('.form-panel');
+        // Create cancel button dynamically if in edit mode
+        const addBtn = document.getElementById('addFacultyBtn');
+        
+        // Observe changes to dataset or we can manage a cancel button.
+        const cancelEditBtn = document.createElement('button');
+        cancelEditBtn.className = 'add-btn';
+        cancelEditBtn.style.background = 'transparent';
+        cancelEditBtn.style.color = '#1e293b';
+        cancelEditBtn.style.border = '1px solid #ccd7e4';
+        cancelEditBtn.style.marginLeft = '0.8rem';
+        cancelEditBtn.innerHTML = '<i class="fas fa-times"></i> Cancel';
+        cancelEditBtn.id = 'cancelEditBtn';
+        cancelEditBtn.style.display = 'none';
+        
+        addBtn.parentNode.insertBefore(cancelEditBtn, addBtn.nextSibling);
+        
+        function toggleCancelButton() {
+          const editing = addBtn.dataset.editingId;
+          cancelEditBtn.style.display = editing ? 'inline-flex' : 'none';
+        }
+        
+        cancelEditBtn.addEventListener('click', () => {
+          resetFormToAddMode();
+          toggleCancelButton();
+        });
+
+        // Override handleAddOrUpdate to also toggle cancel
+        const originalHandle = handleAddOrUpdate;
+        window.handleAddOrUpdate = function() {
+          originalHandle();
+          toggleCancelButton();
+        };
+        // Re-bind add button
+        document.getElementById('addFacultyBtn').removeEventListener('click', handleAddOrUpdate);
+        document.getElementById('addFacultyBtn').addEventListener('click', window.handleAddOrUpdate);
+        
+        // Also cancel visibility after edit called
+        const originalEdit = editFaculty;
+        window.editFaculty = function(id) {
+          originalEdit(id);
+          toggleCancelButton();
+        };
+        
+        // Update table delegation edit
+        document.getElementById('tableBody').removeEventListener('click', function(){});
+        document.getElementById('tableBody').addEventListener('click', (e) => {
+          const target = e.target;
+          if (!target) return;
+          const action = target.getAttribute('data-action');
+          const id = target.getAttribute('data-id');
+          if (!id) return;
+          if (action === 'delete') {
+            deleteFaculty(id);
+          } else if (action === 'edit') {
+            window.editFaculty(id);
+          }
+        });
+
+        // initial toggle
+        toggleCancelButton();
+      }
+
+      // Initialize data
+      facultyList = [...seedData];
+      
+      // Start
+      window.addEventListener('DOMContentLoaded', () => {
+        updateUI();
+        bindEvents();
+        // ensure cancel button hidden initially
+        const cancelBtn = document.getElementById('cancelEditBtn');
+        if (cancelBtn) cancelBtn.style.display = 'none';
+      });
+
+    })();
+  </script>
+</body>
+</html>
